@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const ServerDefaultTimeout = 30 * time.Second
+
 // SBTPRequestHandler is the type for all SBTPServer requestHandlers
 type SBTPRequestHandler func(request *SBTPPacket, response *SBTPPacket) error
 
@@ -30,7 +32,7 @@ func NewSBTPServer() *SBTPServer {
 	return &SBTPServer{
 		shouldStop:      make(chan bool, 1),
 		isStopped:       make(chan bool, 1),
-		timeout:         5 * time.Second,
+		timeout:         ServerDefaultTimeout,
 		requestHandlers: make([]SBTPRequestHandler, 0, 5),
 	}
 }
