@@ -20,8 +20,8 @@ const ByteCountHeader = 16
 /*
 SBTPPacket is a container for sending and receiving a []byte payload over a [net.Conn]
 
-| Packet Version | NULL   | Content-Length | NULL   | Payload              | EOT    |
-| 6 bytes        | 1 byte | 8 bytes		   | 1 byte | Content-Length bytes | 1 byte |
+	| Packet Version | NULL   | Content-Length | NULL   | Payload              | EOT    |
+	| 6 bytes        | 1 byte | 8 bytes		   | 1 byte | Content-Length bytes | 1 byte |
 */
 type SBTPPacket struct {
 	sourceAddr net.Addr
