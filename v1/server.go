@@ -3,9 +3,9 @@ package v1
 import (
 	"errors"
 	"fmt"
+	"github.com/evindunn/sbtp/v1/internal"
 	"io"
 	"net"
-	"sbtp/v1/internal"
 	"time"
 )
 

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/evindunn/sbtp/v1"
 	"net"
-	"sbtp/v1"
 	"slices"
 	"time"
 )
