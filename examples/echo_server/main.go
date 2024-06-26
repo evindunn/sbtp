@@ -2,20 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/evindunn/sbtp/v1"
+	"github.com/evindunn/sbtp"
 	"net"
 	"slices"
 	"time"
 )
 
-func echoHandler(request *v1.SBTPPacket, response *v1.SBTPPacket) error {
+func echoHandler(request *sbtp.SBTPPacket, response *sbtp.SBTPPacket) error {
 	requestPayload := request.GetPayload()
 	fmt.Printf("Echoing %d bytes back to %s\n", len(requestPayload), request.SourceAddr())
 	response.SetPayload(requestPayload)
 	return nil
 }
 
-func repeatHandler(_ *v1.SBTPPacket, response *v1.SBTPPacket) error {
+func repeatHandler(_ *sbtp.SBTPPacket, response *sbtp.SBTPPacket) error {
 	fmt.Println("Repeating response...")
 	responsePayload := response.GetPayload()
 	response.SetPayload(slices.Concat(responsePayload, responsePayload))
@@ -27,7 +27,7 @@ func main() {
 
 	request := []byte("Hello!")
 
-	server := v1.NewSBTPServer()
+	server := sbtp.NewSBTPServer()
 	server.AddHandler(echoHandler)
 	server.AddHandler(repeatHandler)
 
@@ -40,7 +40,7 @@ func main() {
 	go server.Start(serverListenerTCP)
 	time.Sleep(2 * time.Second)
 
-	client := v1.NewSBTPClient()
+	client := sbtp.NewSBTPClient()
 	err = client.Connect("tcp", serverAddr)
 	if err != nil {
 		err = fmt.Errorf("Error connecting to server: %s\n", err)

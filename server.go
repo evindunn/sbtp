@@ -1,9 +1,9 @@
-package v1
+package sbtp
 
 import (
 	"errors"
 	"fmt"
-	"github.com/evindunn/sbtp/v1/internal"
+	"github.com/evindunn/sbtp/internal"
 	"io"
 	"net"
 	"time"
