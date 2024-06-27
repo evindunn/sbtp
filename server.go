@@ -51,7 +51,7 @@ func (s *SBTPServer) AddHandler(handler SBTPRequestHandler) {
 // handleConnection runs for each client connected to the SBTPServer, serving requests until the client disconnects
 // or SBTPServer.timeout is hit on a read or write operation.
 func (s *SBTPServer) handleConnection(conn net.Conn) {
-	fmt.Printf("Accepted connection from %s\n", conn.RemoteAddr())
+	//fmt.Printf("Accepted connection from %s\n", conn.RemoteAddr())
 
 	for {
 		request := NewSBTPPacket(conn.RemoteAddr())

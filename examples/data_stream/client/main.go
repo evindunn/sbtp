@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"github.com/evindunn/sbtp"
 	"golang.org/x/term"
 	"io"
+	"net"
 	"os"
+	"os/signal"
 	"time"
 )
 
@@ -26,32 +29,46 @@ func main() {
 	}()
 
 	client := sbtp.NewSBTPClient()
-	userInput := make([]byte, 1)
+	userInput := bufio.NewReader(os.Stdin)
 
 	err = client.Connect("tcp", serverAddr)
 	if err != nil {
 		panic(err)
 	}
 	defer func() {
-		if err := client.Close(); err != nil {
+		if err := client.Close(); err != nil && !errors.Is(err, io.EOF) {
 			panic(err)
 		}
 	}()
+	tcpConn := client.Conn.(*net.TCPConn)
+	err = tcpConn.SetKeepAlive(true)
+	if err != nil {
+		panic(err)
+	}
 
-	fmt.Printf("Connecting to %s...\n\n", serverAddr)
+	fmt.Printf("Connecting to %s...\r\n\r\n", serverAddr)
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
 
-	for {
-		bytesRead, err := os.Stdin.Read(userInput)
-		if errors.Is(err, io.EOF) {
+	shouldStop := false
+	for !shouldStop {
+		select {
+		case <-interrupt:
+			shouldStop = true
 			break
-		}
-		if err == nil && bytesRead == 1 {
-			fmt.Print(string(userInput))
-			_, err = client.Request(userInput)
+		default:
+			userByte, err := userInput.ReadByte()
+			if err != nil {
+				fmt.Printf("Error reading user input: %v\r\n", err)
+				shouldStop = true
+				break
+			}
+			fmt.Printf("%c", userByte)
+			_, err = client.Request([]byte{userByte})
 			if err != nil {
 				panic(err)
 			}
+			time.Sleep(1 / 60 * time.Second)
 		}
-		time.Sleep(1 / 60 * time.Second)
 	}
 }

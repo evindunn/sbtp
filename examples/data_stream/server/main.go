@@ -4,12 +4,20 @@ import (
 	"fmt"
 	"github.com/evindunn/sbtp"
 	"net"
+	"strings"
+	"unicode"
 )
 
 func streamHandler(req *sbtp.SBTPPacket, res *sbtp.SBTPPacket) error {
 	payload := req.GetPayload()
+	printableOnly := strings.Map(func(r rune) rune {
+		if unicode.IsPrint(r) {
+			return r
+		}
+		return -1
+	}, string(payload))
 	res.SetPayload([]byte("OK"))
-	fmt.Print(string(payload))
+	fmt.Print(printableOnly)
 	return nil
 }
 
