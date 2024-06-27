@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/evindunn/sbtp"
+	"github.com/evindunn/sbtp/pkg"
 	"net"
 	"slices"
 	"time"

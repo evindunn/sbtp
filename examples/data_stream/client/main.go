@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/evindunn/sbtp"
+	"github.com/evindunn/sbtp/pkg"
 	"golang.org/x/term"
 	"io"
 	"net"
